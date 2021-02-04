@@ -1,25 +1,34 @@
 // Find all of the objects that are paintings and have the word "rabbit" in the title
 var apiEndpointBaseURL = "https://api.harvardartmuseums.org/object";
-
-const RowElement = document.getElementById('row')
+const apiKey = ''
+const title2 = document.getElementById('title2')
+const Container2 = document.getElementById('ctn2')
 const btn = document.getElementById("btn")
 const btn2 = document.getElementById("btn2")
 const search = document.getElementById("search")
 const search2 = document.getElementById("search2")
-btn.addEventListener('click', getPaints)
-btn2.addEventListener('click', getPaints)
+btn.addEventListener('click', getArt)
+btn2.addEventListener('click', getArt)
 
 search.onkeydown = pressEnter
 search2.onkeydown = pressEnter2
 
+function getArt(){
+
+    getPaints()
+    getPrints()
+    getDraws()
+    getSculpture()
+}
+
 function pressEnter(e) {
 
-    if (e.code === 'Enter')
+    if (e.code === 'Enter' || e.code === 'NumpadEnter')
         btn.click()
 }
 function pressEnter2(e) {
 
-    if (e.code === 'Enter' || e.code ==='NumpadEnter')
+    if (e.code === 'Enter' || e.code === 'NumpadEnter')
         btn.click()
 }
 
@@ -39,15 +48,33 @@ function getPaints() {
 
 
     var queryString = $.param({
-        apikey: "",
+        apikey: apiKey,
         title: getvalue(),
         classification: "Paintings"
     });
+    
+    btn.style.display = 'block'
+    search.style.display = 'block'
+    btn2.style.display = 'none'
+    search2.style.display = 'none'
+    title2.style.display = 'none'
+    Container2.innerHTML = ' '
 
-RowElement.innerHTML = ' '
+
     $.getJSON(apiEndpointBaseURL + "?" + queryString, data => {
-        console.log(data.records)
+        
+        const RowElement = document.createElement('div')
+        RowElement.classList.add('row')
+        Container2.appendChild(RowElement)
+        
+        const TitleElement = document.createElement('h5')
+        TitleElement.id = 'category'
+        TitleElement.innerHTML = data.records[0].classification
+        RowElement.appendChild(TitleElement)
+        
         data.records.forEach(paintInfo => {
+
+
             const ColumnElement = document.createElement('div')
             ColumnElement.classList.add('col-md-4')
 
@@ -60,7 +87,7 @@ RowElement.innerHTML = ' '
 
             const imgCard = document.createElement('img')
             imgCard.classList.add('card-img-top')
-            imgCard.src = paintInfo.primaryimageurl
+            imgCard.src = paintInfo.primaryimageurl != null ? paintInfo.primaryimageurl : 'assets/no-image.png'
             imgCard.alt = 'No image Found'
             cardElement.appendChild(imgCard)
 
@@ -70,7 +97,7 @@ RowElement.innerHTML = ' '
 
             const cardTitle = document.createElement('h5')
             cardTitle.classList.add('card-title')
-            cardTitle.innerHTML = paintInfo.alphasort
+            cardTitle.innerHTML = 'Title: ' + paintInfo.alphasort
             cardBody.appendChild(cardTitle)
 
             const cardText = document.createElement('p')
@@ -78,10 +105,91 @@ RowElement.innerHTML = ' '
             cardText.innerHTML = paintInfo.title
             cardBody.appendChild(cardText)
 
+            const cardText2 = document.createElement('p')
+            cardText2.classList.add('card-text')
+            cardText2.innerHTML = 'Dated: ' + paintInfo.century
+            cardBody.appendChild(cardText2)
+
             const cardLink = document.createElement('a')
             cardLink.classList.add('btn')
             cardLink.classList.add('btn-outline-light')
             cardLink.classList.add('btn-sm')
+            cardLink.target = '_blank'
+            cardLink.href = paintInfo.url
+            cardLink.innerHTML = 'More info'
+            cardBody.appendChild(cardLink)
+
+            RowElement.appendChild(ColumnElement)
+            
+
+        })
+        const hr = document.createElement('hr')
+        RowElement.appendChild(hr)
+
+    });
+}function getPrints() {
+
+
+    var queryString = $.param({
+        apikey: apiKey,
+        title: getvalue(),
+        classification: "Prints"
+    });
+    
+
+
+    $.getJSON(apiEndpointBaseURL + "?" + queryString, data => {
+        const RowElement = document.createElement('div')
+        RowElement.classList.add('row')
+        Container2.appendChild(RowElement)
+        
+        const TitleElement = document.createElement('h5')
+        TitleElement.id = 'category'
+        TitleElement.innerHTML = data.records[0].classification
+        RowElement.appendChild(TitleElement)
+        data.records.forEach(paintInfo => {
+
+
+            const ColumnElement = document.createElement('div')
+            ColumnElement.classList.add('col-md-4')
+
+            const cardElement = document.createElement('div')
+            cardElement.classList.add('card')
+            cardElement.classList.add('mb-4')
+            cardElement.classList.add('text-white')
+            cardElement.classList.add('bg-dark')
+            ColumnElement.appendChild(cardElement)
+
+            const imgCard = document.createElement('img')
+            imgCard.classList.add('card-img-top')
+            imgCard.src = paintInfo.primaryimageurl != null ? paintInfo.primaryimageurl : 'assets/no-image.png'
+            imgCard.alt = 'No image Found'
+            cardElement.appendChild(imgCard)
+
+            const cardBody = document.createElement('div')
+            cardBody.classList.add('card-body')
+            cardElement.appendChild(cardBody)
+
+            const cardTitle = document.createElement('h5')
+            cardTitle.classList.add('card-title')
+            cardTitle.innerHTML = 'Title:' + paintInfo.alphasort
+            cardBody.appendChild(cardTitle)
+
+            const cardText = document.createElement('p')
+            cardText.classList.add('card-text')
+            cardText.innerHTML = paintInfo.title
+            cardBody.appendChild(cardText)
+
+            const cardText2 = document.createElement('p')
+            cardText2.classList.add('card-text')
+            cardText2.innerHTML = 'Dated: ' +paintInfo.century
+            cardBody.appendChild(cardText2)
+
+            const cardLink = document.createElement('a')
+            cardLink.classList.add('btn')
+            cardLink.classList.add('btn-outline-light')
+            cardLink.classList.add('btn-sm')
+            cardLink.target = '_blank'
             cardLink.href = paintInfo.url
             cardLink.innerHTML = 'More info'
             cardBody.appendChild(cardLink)
@@ -89,13 +197,158 @@ RowElement.innerHTML = ' '
             RowElement.appendChild(ColumnElement)
 
         })
+        const hr = document.createElement('hr')
+        RowElement.appendChild(hr)
 
     });
 }
+function getDraws() {
 
-function createContainer(){
-    ContainerElement.innerHTML = ''
-    const RowElement = document.createElement('div')
-    ContainerElement.classList.add("row")
-    ContainerElement.appendChild(RowElement)
+
+    var queryString = $.param({
+        apikey: apiKey,
+        title: getvalue(),
+        classification: "Drawings"
+    });
+    
+
+
+    $.getJSON(apiEndpointBaseURL + "?" + queryString, data => {
+        const RowElement = document.createElement('div')
+        RowElement.classList.add('row')
+        Container2.appendChild(RowElement)
+        
+        const TitleElement = document.createElement('h5')
+        TitleElement.id = 'category'
+        TitleElement.innerHTML = data.records[0].classification
+        RowElement.appendChild(TitleElement)
+        data.records.forEach(paintInfo => {
+
+
+            const ColumnElement = document.createElement('div')
+            ColumnElement.classList.add('col-md-4')
+
+            const cardElement = document.createElement('div')
+            cardElement.classList.add('card')
+            cardElement.classList.add('mb-4')
+            cardElement.classList.add('text-white')
+            cardElement.classList.add('bg-dark')
+            ColumnElement.appendChild(cardElement)
+
+            const imgCard = document.createElement('img')
+            imgCard.classList.add('card-img-top')
+            imgCard.src = paintInfo.primaryimageurl != null ? paintInfo.primaryimageurl : 'assets/no-image.png'
+            imgCard.alt = 'No image Found'
+            cardElement.appendChild(imgCard)
+
+            const cardBody = document.createElement('div')
+            cardBody.classList.add('card-body')
+            cardElement.appendChild(cardBody)
+
+            const cardTitle = document.createElement('h5')
+            cardTitle.classList.add('card-title')
+            cardTitle.innerHTML = 'Title:' + paintInfo.alphasort
+            cardBody.appendChild(cardTitle)
+
+            const cardText = document.createElement('p')
+            cardText.classList.add('card-text')
+            cardText.innerHTML = paintInfo.title
+            cardBody.appendChild(cardText)
+
+            const cardText2 = document.createElement('p')
+            cardText2.classList.add('card-text')
+            cardText2.innerHTML = 'Dated: ' +paintInfo.century
+            cardBody.appendChild(cardText2)
+
+            const cardLink = document.createElement('a')
+            cardLink.classList.add('btn')
+            cardLink.classList.add('btn-outline-light')
+            cardLink.classList.add('btn-sm')
+            cardLink.target = '_blank'
+            cardLink.href = paintInfo.url
+            cardLink.innerHTML = 'More info'
+            cardBody.appendChild(cardLink)
+
+            RowElement.appendChild(ColumnElement)
+
+        })
+        const hr = document.createElement('hr')
+        RowElement.appendChild(hr)
+
+    });
+}function getSculpture() {
+
+
+    var queryString = $.param({
+        apikey: apiKey,
+        title: getvalue(),
+        classification: "Sculpture"
+    });
+    
+
+
+    $.getJSON(apiEndpointBaseURL + "?" + queryString, data => {
+        console.log(data.records)
+        const RowElement = document.createElement('div')
+        RowElement.classList.add('row')
+        Container2.appendChild(RowElement)
+        
+        const TitleElement = document.createElement('h5')
+        TitleElement.id = 'category'
+        TitleElement.innerHTML = data.records[0].classification+'s'
+        RowElement.appendChild(TitleElement)
+        data.records.forEach(paintInfo => {
+
+
+            const ColumnElement = document.createElement('div')
+            ColumnElement.classList.add('col-md-4')
+
+            const cardElement = document.createElement('div')
+            cardElement.classList.add('card')
+            cardElement.classList.add('mb-4')
+            cardElement.classList.add('text-white')
+            cardElement.classList.add('bg-dark')
+            ColumnElement.appendChild(cardElement)
+
+            const imgCard = document.createElement('img')
+            imgCard.classList.add('card-img-top')
+            imgCard.src = paintInfo.primaryimageurl != null ? paintInfo.primaryimageurl : 'assets/no-image.png'
+            imgCard.alt = 'No image Found'
+            cardElement.appendChild(imgCard)
+
+            const cardBody = document.createElement('div')
+            cardBody.classList.add('card-body')
+            cardElement.appendChild(cardBody)
+
+            const cardTitle = document.createElement('h5')
+            cardTitle.classList.add('card-title')
+            cardTitle.innerHTML = 'Title:' + paintInfo.alphasort
+            cardBody.appendChild(cardTitle)
+
+            const cardText = document.createElement('p')
+            cardText.classList.add('card-text')
+            cardText.innerHTML = paintInfo.title
+            cardBody.appendChild(cardText)
+
+            const cardText2 = document.createElement('p')
+            cardText2.classList.add('card-text')
+            cardText2.innerHTML = 'Dated: ' +paintInfo.century
+            cardBody.appendChild(cardText2)
+
+            const cardLink = document.createElement('a')
+            cardLink.classList.add('btn')
+            cardLink.classList.add('btn-outline-light')
+            cardLink.classList.add('btn-sm')
+            cardLink.target = '_blank'
+            cardLink.href = paintInfo.url
+            cardLink.innerHTML = 'More info'
+            cardBody.appendChild(cardLink)
+
+            RowElement.appendChild(ColumnElement)
+
+        })
+        const hr = document.createElement('hr')
+        RowElement.appendChild(hr)
+
+    });
 }

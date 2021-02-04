@@ -2,7 +2,9 @@
 Search for art in Harvard Museum
 [x] template 
 [ ] responsive
-[x] Searching for paints
-[ ] Searching for sculpture
+[x] Searching for Paints
+[x] Searching for Prints
+[x] Searching for Drawings
+[x] Searching for Sculpturs
 [ ] Not found screen
-[ ] NotFound Picture
+[x] NotFound Picture

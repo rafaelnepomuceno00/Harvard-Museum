@@ -7,21 +7,30 @@ header{
 .title{
     color: white;
 }
+   
 
-.container{
-    margin-top: 20px;
-
-}
 .col-sm{
     margin-top: 25px;
     margin-bottom: 25px;
 }
 
 #title2{
+    font-size: 40px;
     color: white;
     text-align: center;
 }
 .card-img-top{
-    width: 354px;
-    height: 220px;
+    width: auto;
+    max-width: 354px;
+    height: auto;
+    max-height: 350px;
+}
+
+
+#search, #btn{
+display: none;
+}
+
+#category{
+    font-size: 40px;
 }

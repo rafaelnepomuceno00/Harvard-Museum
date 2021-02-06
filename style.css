@@ -1,14 +1,14 @@
 header{
     text-align: center;
 }
-.container-fluid{
-    text-align: center;
-}
 .title{
     color: white;
 }
    
-
+.container{
+    position: relative;
+    top :150px;
+}
 .col-sm{
     margin-top: 25px;
     margin-bottom: 25px;
@@ -21,9 +21,7 @@ header{
 }
 .card-img-top{
     width: auto;
-    max-width: 354px;
     height: auto;
-    max-height: 350px;
 }
 
 
@@ -33,4 +31,7 @@ display: none;
 
 #category{
     font-size: 40px;
+}
+hr{
+    width: 5px;
 }

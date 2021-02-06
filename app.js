@@ -1,8 +1,9 @@
-// Find all of the objects that are paintings and have the word "rabbit" in the title
 var apiEndpointBaseURL = "https://api.harvardartmuseums.org/object";
 const apiKey = ''
 const title2 = document.getElementById('title2')
 const Container2 = document.getElementById('ctn2')
+const Container = document.getElementById('cntr')
+const DivTop = document.getElementById('div-top')
 const btn = document.getElementById("btn")
 const btn2 = document.getElementById("btn2")
 const search = document.getElementById("search")
@@ -14,7 +15,6 @@ search.onkeydown = pressEnter
 search2.onkeydown = pressEnter
 
 function getAllArts(){
-//Prints Drawings Sculpture Paintings
 
     getArt('Prints')
     getArt('Drawings')
@@ -58,7 +58,8 @@ function getArt(clfctn) {
     search2.style.display = 'none'
     title2.style.display = 'none'
     Container2.innerHTML = ' '
-
+    Container.style.top = '-10px'
+    DivTop.style.height='0'
 
     $.getJSON(apiEndpointBaseURL + "?" + queryString, data => {
         
@@ -125,5 +126,5 @@ function getArt(clfctn) {
         const hr = document.createElement('hr')
         RowElement.appendChild(hr)
 
-    });
+    })
 }
